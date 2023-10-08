@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 huggingface_endpoint = os.getenv("hugging_face_api")
-
+print(huggingface_endpoint)
 
 fallacies = {
     "Circular reasoning": "Circular reasoning occurs when the premise of an argument is used to support itself.\n\nExample: The President of the United States is a good leader (claim), because they are the leader of this country ",
@@ -113,7 +113,10 @@ if __name__ == "__main__":
         except:
             print("Error Loading Data, Try Again")
 
-        st.info(f"The most accurate logical fallacy is {grouped_fallacies[0]}. Others are less relevant.")
+        try:
+            st.info(f"The most accurate logical fallacy is {grouped_fallacies[0]}. Others are less relevant.")
+        except:
+            print("Error Loading Data, Try Again !")
 
 
 
