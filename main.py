@@ -99,26 +99,27 @@ if __name__ == "__main__":
     statement = st.text_input("Enter Your Statement Here : ")
     if statement:
         try:
-           output = find_fallacies({"inputs": f"{statement}", })
-        except:
-            print("Error Acquiring Data, Try Again !")
+            output = find_fallacies({"inputs": f"{statement}", })
+        except Exception as e:
+            st.error(f"Error Acquiring Data: {e}")
+
+        # Add a sleep here to give time for loading
         time.sleep(4)
-        try:
-            top_three_fallacies()
-        except:
-            print("Unable to detect fallacies! Try Again")
 
         try:
-           visualize()
-        except:
-            print("Error Loading Data, Try Again")
+            top_three_fallacies()
+        except Exception as e:
+            st.error(f"Try Again! Unable to detect fallacies: {e}")
+
+        # Add a sleep here to give time for loading
+        time.sleep(2)
+
+        try:
+            visualize()
+        except Exception as e:
+            st.error(f"Try Again! Error Loading Data: {e}")
 
         try:
             st.info(f"The most accurate logical fallacy is {grouped_fallacies[0]}. Others are less relevant.")
-        except:
-            print("Error Loading Data, Try Again !")
-
-
-
-
-
+        except Exception as e:
+            st.error(f"Try Again! Error Loading Data: {e}")
