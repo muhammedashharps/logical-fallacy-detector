@@ -5,6 +5,7 @@ from streamlit_lottie import st_lottie
 import time
 import os
 from dotenv import load_dotenv
+import sys
 
 load_dotenv()
 
@@ -46,7 +47,7 @@ animation = load_anime("https://lottie.host/44a46447-0aac-4fb0-a430-9c58a97016ab
 
 with st.container():
     st.title("LOGICAL FALLACY DETECTOR 🔎")
-    st.caption("TOP 3 PROBABLE FLAWS")
+    st.link_button("Intro To Fallacies", url = "https://www.freecodecamp.org/news/logical-fallacies-definition-fallacy-examples/")
     st.write("---")
 
 with st.container():
@@ -94,32 +95,58 @@ def visualize():
                     st.write(fallacies.get(grouped_fallacies[i]))
         st.write("---")
 
+def generate_info_for_users():
+    info_message = """
+    Important Information for Users:
+    
+    1. Logical fallacy detection is based on AI and may not always be 100% accurate. It can sometimes suggest fallacies even when none are present in the statement.
+    
+    2. Use the detected fallacies as a starting point for critical thinking and analysis, but always evaluate statements independently.
+    
+    3. Keep in mind that the context of a statement can affect the presence of fallacies. The AI model may not always capture context perfectly.
+    
+    
+    """
+    
+    st.info(info_message)
 
 if __name__ == "__main__":
+    st.title("Logical Fallacy Detector")
+    
     statement = st.text_input("Enter Your Statement Here : ")
-    if statement:
-        try:
-            output = find_fallacies({"inputs": f"{statement}", })
-        except Exception as e:
-            st.error(f"Error Acquiring Data: {e}")
+    submit_button = st.button("Submit")
+    
+    if statement:  
+        if submit_button:
+            output = None
+            grouped_fallacies = []
 
-        # Add a sleep here to give time for loading
-        time.sleep(4)
+            try:
+                while output is None:
+                    output = find_fallacies({"inputs": f"{statement}"})
+            except Exception as e:
+                print("An error occurred. Please try again.")
+                sys.exit(1)
 
-        try:
-            top_three_fallacies()
-        except Exception as e:
-            st.error(f"Try Again! Unable to detect fallacies: {e}")
+            try:
+                while not grouped_fallacies:
+                    top_three_fallacies()
+            except Exception as e:
+                print("An error occurred. Please try again.")
+                sys.exit(1)
 
-        # Add a sleep here to give time for loading
-        time.sleep(2)
+            try:
+                visualize() 
+            except Exception as e:
+                print("An error occurred while visualizing. Please try again.")
+                sys.exit(1)
 
-        try:
-            visualize()
-        except Exception as e:
-            st.error(f"Try Again! Error Loading Data: {e}")
+            try:
+                if grouped_fallacies:
+                    st.info(f"The most accurate logical fallacy is {grouped_fallacies[0]}. Others are less relevant.")
+                else:
+                    st.info("No specific logical fallacies were detected in the statement. Try Again!")
+            except Exception as e:
+                st.error("Error Loading Data")
 
-        try:
-            st.info(f"The most accurate logical fallacy is {grouped_fallacies[0]}. Others are less relevant.")
-        except Exception as e:
-            st.error(f"Try Again! Error Loading Data: {e}")
+            generate_info_for_users()
