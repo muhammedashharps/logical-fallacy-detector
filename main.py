@@ -125,20 +125,20 @@ if __name__ == "__main__":
                 while output is None:
                     output = find_fallacies({"inputs": f"{statement}"})
             except Exception as e:
-                print("An error occurred. Please try again.")
+                st.error("An error occurred. Please try again.")
                 sys.exit(1)
 
             try:
                 while not grouped_fallacies:
                     top_three_fallacies()
             except Exception as e:
-                print("An error occurred. Please try again.")
+                st.error("An error occurred. Please try again.")
                 sys.exit(1)
 
             try:
                 visualize() 
             except Exception as e:
-                print("An error occurred while visualizing. Please try again.")
+                st.error("An error occurred while visualizing. Please try again.")
                 sys.exit(1)
 
             try:
